@@ -33,17 +33,24 @@
     {{#each movies}}
         <h3>{{title}}</h3>
         <li>{{overview}}</li>
+        <img src="https://www.themoviedb.org/t/p/w440_and_h660_face{{poster_path}}">
+        <button data-id="{{id}}">Like</button>
+        <p>Like: {{like}}</p>
     {{/each }}
 
 </template>
+
 <template name="Recherche">
     <form>
         <input type="text" placeholder="Recherche ..." name="Tag">
         <input type="submit" value="Recherche">
+        <h1>Recherche</h1>
+        {{#each search}}
+            <h3>{{page}}</h3>
+        {{/each }}
     </form>
-    <h1>Recherche</h1>
-    {{#each search}}
-        <h3>{{name}}</h3>
-    {{/each }}
+
+    <p>{{searchhh}}</p>
+
 </template>
 

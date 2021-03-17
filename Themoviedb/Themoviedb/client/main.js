@@ -33,12 +33,35 @@ Template.home.onCreated(function homeOnCreated() {
         ctrl.movies.set(JSON.parse(response.content).results);
       });
 });
-Template.Recherche.onCreated(function RechercheOnCreated() {
-  let ctrlRecherche = this;
-  this.search = new ReactiveVar();
-  ctrlRecherche.search.set(contentRecherche);
-  console.log('data : ' + contentRecherche);
+
+Template.home.events({
+
+  'click button'(event, instance) {
+    // increment the counter when button is clicked
+    const idMovie = event.currentTarget.dataset.id;
+    updateLikeId(idMovie, Template.instance().movies);
+
+  },
+
 });
+
+function updateLikeId(idMovies, movies){
+  HTTP.call('GET', '/api/like/' + idMovies, {},
+      function(error, response) {
+        // Handle the error or response here.
+        const index = movies.get().findIndex( function (item) {
+          return item.id == JSON.parse(response.content).id;
+        });
+
+        if(index < -1){
+          let newMoviesList = movies.get();
+          newMoviesList[index].like = JSON.parse(response.content).like;
+          movies.set(newMoviesList);
+        }
+        //console.log('data : ' + contentRecherche);
+      });
+
+}
 
 Template.Recherche.events({
 
@@ -46,28 +69,30 @@ Template.Recherche.events({
     // increment the counter when button is clicked
     event.preventDefault();
     Tag = event.target.Tag.value;
-    let ctrlRecherche = this;
-    this.search = new ReactiveVar();
-    HTTP.call('GET', '/api/search/' + Tag, {},
-        function(error, response) {
-          // Handle the error or response here.
-          contentRecherche = JSON.parse(response.content).results;
+    const idsearch = event.currentTarget.dataset.id;
+    updateSearch(Tag, Template.instance().search);
 
-          //console.log('data : ' + contentRecherche);
-        });
   },
 
 });
 
+function updateSearch(Tag, search){
+  HTTP.call('GET', '/api/search/' + Tag, {},
+      function(error, response) {
+        // Handle the error or response here.
+        let newSearch = search.get();
+        newSearch.name = JSON.parse(response.content).name;
+        search.set(newSearch);
+        //console.log('data : ' + contentRecherche);
+      });
+
+}
+
 Template.home.helpers({
   movies() {
+
     return Template.instance().movies.get();
   }
 
 });
 
-Template.Recherche.helpers({
-  search(){
-    return Template.instance().search.get();
-  }
-});
