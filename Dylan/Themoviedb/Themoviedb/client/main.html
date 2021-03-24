@@ -1,4 +1,5 @@
 <head>
+  <link href="https://bootswatch.com/4/solar/bootstrap.min.css" rel="stylesheet"/>
   <title>Themoviedb</title>
 </head>
 
@@ -13,28 +14,22 @@
 
 
 <template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
 </template>
 
 <template name="info">
-  <h2>Learn Meteor!</h2>
-  <ul>
-    <li><a href="https://www.meteor.com/try" target="_blank">Do the Tutorial</a></li>
-    <li><a href="http://guide.meteor.com" target="_blank">Follow the Guide</a></li>
-    <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
-    <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
-  </ul>
 </template>
 
 <template name="home">
 
     <h1>Movies List</h1>
     {{#each movies}}
-        <h3>{{title}}</h3>
-        <li>{{overview}}</li>
-        <img src="https://www.themoviedb.org/t/p/w440_and_h660_face{{poster_path}}">
-        <button data-id="{{id}}">Like</button>
+    <img src="https://www.themoviedb.org/t/p/w440_and_h660_face{{poster_path}}">
+    <div class="card text-white bg-success mb-3" style="max-width: 30rem;">
+  <div class="card-header">{{title}}</div>
+  
+    <li class="card-text">{{overview}}</li>
+  </div>
+        <button class="btn btn-primary" data-id="{{id}}">Like</button>
         <p>Like: {{like}}</p>
     {{/each }}
 
