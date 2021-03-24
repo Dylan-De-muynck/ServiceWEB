@@ -45,6 +45,11 @@ Template.home.events({
 
 });
 
+Template.recherche.onCreated(function homeOnCreated(){
+    let ctrl = this;
+    this.page = new ReactiveVar();
+    ctrl.page.set();
+});
 function updateLikeId(idMovies, movies){
 
     HTTP.call('PUT', 'http://localhost:3000/api/like/' + idMovies, {},
@@ -70,34 +75,41 @@ function updateLikeId(idMovies, movies){
         });
 }
 
-Template.Recherche.events({
+Template.recherche.events({
 
   'submit form'(event, instance) {
     // increment the counter when button is clicked
     event.preventDefault();
     Tag = event.target.Tag.value;
     const idsearch = event.currentTarget.dataset.id;
-    updateSearch(Tag, Template.instance().search);
+    updateSearch(Tag, Template.instance().page);
 
   },
 
 });
 
 function updateSearch(Tag, search){
-  HTTP.call('GET', '/api/search/' + Tag, {},
+  HTTP.call('PUT', 'http://localhost:3000/api/search/' + Tag, {},
       function(error, response) {
         // Handle the error or response here.
-        let newSearch = search.get();
-        newSearch.name = JSON.parse(response.content).name;
-        search.set(newSearch);
+          console.log("test : " + response.content);
+          let Nsearch = new ReactiveVar();
+          //let newsearch = search.get();
+          Nsearch.page = JSON.parse(response.content).page;
+          search.set(Nsearch);
         //console.log('data : ' + contentRecherche);
       });
 
 }
 
+Template.recherche.helpers({
+    search() {
+        return Template.instance().page.get();
+    }
+});
+
 Template.home.helpers({
   movies() {
-
     return Template.instance().movies.get();
   }
 

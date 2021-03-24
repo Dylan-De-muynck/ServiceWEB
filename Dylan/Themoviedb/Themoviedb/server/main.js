@@ -47,7 +47,6 @@ WebApp.connectHandlers.use('/api/discover/search/', (req, res, next) => {
 
                     //console.log(dbressource);
                     if(dbressource){
-                        console.log("TEST");
                         movieRessource.like = dbressource.like;
                     } else {
                         movieRessource.like = 0;
@@ -55,6 +54,7 @@ WebApp.connectHandlers.use('/api/discover/search/', (req, res, next) => {
                 });
 
             res.writeHead(200);
+
             res.write(JSON.stringify(data));
             res.end();
     });
@@ -70,11 +70,15 @@ WebApp.connectHandlers.use('/api/search/', (req, res, next) => {
             // Handle the error or response here.
             // ctrl.movies.set(JSON.parse(response.content).results)
 
-            dataRecherche = response.content;
+            dataRecherche = response.data;
+
+            res.writeHead(200);
+            console.log("Response : " + JSON.stringify(dataRecherche));
+            res.write(JSON.stringify(dataRecherche));
+            res.end();
         });
     //console.log(dataRecherche);
-    res.writeHead(200);
-    res.end(dataRecherche);
+
 });
 
 //button

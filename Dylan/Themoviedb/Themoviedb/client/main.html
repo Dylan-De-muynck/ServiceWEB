@@ -8,7 +8,7 @@
   {{> hello}}
   {{> info}}
   {{> home}}
-  {{> Recherche}}
+  {{> recherche}}
 </body>
 
 
@@ -40,14 +40,12 @@
 
 </template>
 
-<template name="Recherche">
+<template name="recherche">
     <form>
         <input type="text" placeholder="Recherche ..." name="Tag">
         <input type="submit" value="Recherche">
         <h1>Recherche</h1>
-        {{#each search}}
             <h3>{{page}}</h3>
-        {{/each }}
     </form>
 
     <p>{{searchhh}}</p>
