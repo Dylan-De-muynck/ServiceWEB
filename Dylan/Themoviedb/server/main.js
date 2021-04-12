@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-import { localData } from './local-data.js';
 import { HTTP } from "meteor/http";
 import { Mongo } from 'meteor/mongo';
+import { SERVER_CONFIG } from 'server/server-config.js'
 
 /*
 
@@ -20,6 +20,7 @@ import { Mongo } from 'meteor/mongo';
 // API exemple : https://api.themoviedb.org/3/search/company?api_key=1793c4843a64fbd6fdba88ce08e45c5f&query=interstellar&page=1
 let data;
 let dataRecherche;
+let api_key = SERVER_CONFIG.api_key;
 
 const likesCollection = new Mongo.Collection('likes');
 
@@ -38,7 +39,7 @@ Meteor.startup(() => {
 });
 
 WebApp.connectHandlers.use('/api/discover/search/', (req, res, next) => {
-    HTTP.call('GET', 'https://api.themoviedb.org/3/discover/movie?api_key=1793c4843a64fbd6fdba88ce08e45c5f&language=fr-FR', {},
+    HTTP.call('GET', 'https://api.themoviedb.org/3/discover/movie?api_key=' + api_key + '&language=fr-FR', {},
         function(error, response) {
             data = response.data;
 
@@ -66,7 +67,7 @@ WebApp.connectHandlers.use('/api/discover/search/', (req, res, next) => {
 WebApp.connectHandlers.use('/api/search/', (req, res, next) => {
     let Tag = req.url.split("/");
 
-    HTTP.call('GET', 'https://api.themoviedb.org/3/search/movie?api_key=1793c4843a64fbd6fdba88ce08e45c5f&query=' + Tag[1] + '', {},
+    HTTP.call('GET', 'https://api.themoviedb.org/3/search/movie?api_key=' + api_key + '1793c4843a64fbd6fdba88ce08e45c5f&query=' + Tag[1] + '', {},
         function(error, response) {
             // Handle the error or response here.
             // ctrl.movies.set(JSON.parse(response.content).results)
