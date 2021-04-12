@@ -1,0 +1,108 @@
+<head>
+    <link href="https://bootswatch.com/4/solar/bootstrap.min.css" rel="stylesheet"/>
+    <title>Themoviedb</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Themoviedb</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home
+                    <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Separated link</a>
+                </div>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" action="/Recherche/">
+             <!-- <input class="form-control mr-sm-2" type="search" name="Search"  placeholder="Search"> -->
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+</body>
+
+<template name="home">
+
+    <h1>Welcome to Meteor!</h1>
+
+    <h1>Movies List</h1>
+
+    <div class="modal" id="modalId" style="overflow-y:scroll;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{titleModal}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="https://www.themoviedb.org/t/p/w440_and_h660_face{{pathModal}}">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{#each movies}}
+
+    <div class="card mb-3" style="max-width: 30rem; display: inline-flex;">
+        <h3 class="card-header">{{title}}</h3>
+        <img src="https://www.themoviedb.org/t/p/w440_and_h660_face{{poster_path}}">
+        <div class="card-body">
+            <p class="card-text" id="like">{{overview}}</p>
+        </div>
+        <div class="card-body">
+            <a href="#" class="card-link">link</a>
+            <button onclick="modal()" data-id="{{id}}" id="openModal">Plus d'infos</button>
+            <button data-id="{{id}}" id="ButtonLike">Like</button>
+
+        </div>
+        <div class="card-footer text-muted">
+            <p>Like: {{like}}</p>
+        </div>
+
+    </div>
+    {{/each }}
+
+    <script>
+        function modal(){
+            let modal = document.getElementById('modalId');
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            let modal = document.getElementById('modalId');
+            modal.style.display = 'none';
+        }
+    </script>
+
+</template>
+
+
