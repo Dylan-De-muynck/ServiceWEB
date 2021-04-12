@@ -59,9 +59,12 @@ FlowRouter.route('/', {
                     Template.instance().titleModal.set(GlobalSearchResult[iMovie].title);
                     Template.instance().poster_path.set(GlobalSearchResult[iMovie].poster_path);
 
-                    HTTP.call('GET', '/api/discover/search/movie/', {},
+                    HTTP.call('GET', '/api/discover/search/movie/' + idMovie, {},
                         function(error, response) {
                             // Handle the error or response here.
+                            let movie = JSON.parse(response.content).results;
+
+
                             Template.instance().movieModal.set(JSON.parse(response.content).results);
                             //GlobalSearchResult = JSON.parse(response.content).results;
                         });

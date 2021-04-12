@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from "meteor/http";
 import { Mongo } from 'meteor/mongo';
-import { SERVER_CONFIG } from 'server/server-config.js'
+import { SERVER_CONFIG } from 'server/server-config.js';
 
 /*
 
@@ -20,6 +20,7 @@ import { SERVER_CONFIG } from 'server/server-config.js'
 // API exemple : https://api.themoviedb.org/3/search/company?api_key=1793c4843a64fbd6fdba88ce08e45c5f&query=interstellar&page=1
 let data;
 let dataRecherche;
+let dataMovie;
 let api_key = SERVER_CONFIG.api_key;
 
 const likesCollection = new Mongo.Collection('likes');
@@ -82,6 +83,26 @@ WebApp.connectHandlers.use('/api/search/', (req, res, next) => {
     //console.log(dataRecherche);
 
 });
+
+WebApp.connectHandlers.use('/api/discover/search/movie/', (req, res, next) => {
+    let Tag = req.url.split("/");
+
+    HTTP.call('GET', 'https://api.themoviedb.org/3/movie/' + Tag[1] + '/videos?api_key=' + api_key + '&language=Fr' + Tag[1] + '', {},
+        function(error, response) {
+            // Handle the error or response here.
+            // ctrl.movies.set(JSON.parse(response.content).results)
+
+            dataMovie = response.data;
+
+            res.writeHead(200);
+            console.log("Response : " + JSON.stringify(dataMovie));
+            res.write(JSON.stringify(dataMovie));
+            res.end();
+        });
+    //console.log(dataRecherche);
+
+});
+
 
 //button
 WebApp.connectHandlers.use('/api/like/', (req, res, next) => {
