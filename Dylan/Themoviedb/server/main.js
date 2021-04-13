@@ -21,10 +21,12 @@ import { SERVER_CONFIG } from './server-config';
 // API exemple : https://api.themoviedb.org/3/search/company?api_key=1793c4843a64fbd6fdba88ce08e45c5f&query=interstellar&page=1
 let data;
 let dataRecherche;
-let dataMovie;
+let dataVideo;
 let api_key = SERVER_CONFIG.api_key;
 
 const likesCollection = new Mongo.Collection('likes');
+
+const videosCollection = new Mongo.Collection('Videos');
 
 var connectHandler = WebApp.connectHandlers;
 
@@ -88,18 +90,29 @@ WebApp.connectHandlers.use('/api/search/', (req, res, next) => {
 
 WebApp.connectHandlers.use('/api/discover/video/', (req, res, next) => {
     let Tag = req.url.split("/");
-    console.log(Tag[1]);
 
     HTTP.call('GET', 'https://api.themoviedb.org/3/movie/' + Tag[1] + '/videos?api_key=' + api_key + '&language=Fr', {},
         function(error, response) {
             // Handle the error or response here.
-            // ctrl.movies.set(JSON.parse(response.content).results)
+            dataVideo = response.data;
 
-            dataMovie = response.data;
+            dataVideo.results.forEach( function (videoRessource) {
+                //console.log(movieRessource.id.toString());
+                let dbressourceVideo = videosCollection.findOne({ name: videoRessource.name.toString() });
+
+                //console.log(dbressource);
+                if(dbressourceVideo){
+                    console.log('dbressourceVideo');
+                    videoRessource.key = dbressourceVideo.key;
+                } else {
+                    console.log(videoRessource.key);
+                    getVideoMongo(videoRessource.key, videoRessource.name)
+                }
+            });
 
             res.writeHead(200);
             //console.log("Response : " + JSON.stringify(dataMovie));
-            res.write(JSON.stringify(dataMovie));
+            res.write(JSON.stringify(dataVideo));
             res.end();
         });
     //console.log(dataRecherche);
@@ -132,6 +145,14 @@ WebApp.connectHandlers.use('/api/like/', (req, res, next) => {
     res.end();
 
 });
+
+function getVideoMongo(key, idVideo){
+
+    //let ressource = likesCollection.findOne({idVideo: idVideo.toString()});
+    console.log(key);
+    videosCollection.insert({name: idVideo, key: key});
+
+}
 
 function updatesLikeMovies(idMovie) {
 

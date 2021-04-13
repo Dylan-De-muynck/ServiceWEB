@@ -62,7 +62,8 @@ FlowRouter.route('/', {
                         function(error, responseVideo) {
                             // Handle the error or response here.
                             let video = JSON.parse(responseVideo.content).results;
-                            console.log(video[0].key);
+                            //console.log(video[0].key);
+
                             ctrl.videos.set(video[0].key);
 
                         });
