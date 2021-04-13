@@ -8,8 +8,6 @@ import './Recherche.html';
 let Tag;
 let GlobalSearchResult;
 
-
-
 FlowRouter.route('/', {
     action: function(params, queryParams) {
         BlazeLayout.render('home');
@@ -23,7 +21,8 @@ FlowRouter.route('/', {
         this.movies = new ReactiveVar();
         this.titleModal = new ReactiveVar();
         this.poster_path = new ReactiveVar();
-        this.movieModal = new ReactiveVar();
+        this.videos = new ReactiveVar();
+
         HTTP.call('GET', '/api/discover/search/', {},
             function(error, response) {
                 // Handle the error or response here.
@@ -52,21 +51,20 @@ FlowRouter.route('/', {
       },
         'click #openModal'(event, instance){
             const idMovie = event.currentTarget.dataset.id;
-
+             let ctrl = Template.instance();
             for (let iMovie = 0; iMovie < GlobalSearchResult.length; iMovie++){
                 if (idMovie == GlobalSearchResult[iMovie].id){
                     console.log("movie ----" + GlobalSearchResult[iMovie].title);
                     Template.instance().titleModal.set(GlobalSearchResult[iMovie].title);
                     Template.instance().poster_path.set(GlobalSearchResult[iMovie].poster_path);
 
-                    HTTP.call('GET', '/api/discover/search/movie/' + idMovie, {},
-                        function(error, response) {
+                    HTTP.call('GET', '/api/discover/video/' + idMovie, {},
+                        function(error, responseVideo) {
                             // Handle the error or response here.
-                            let movie = JSON.parse(response.content).results;
+                            let video = JSON.parse(responseVideo.content).results;
+                            console.log(video[0].key);
+                            ctrl.videos.set(video[0].key);
 
-
-                            Template.instance().movieModal.set(JSON.parse(response.content).results);
-                            //GlobalSearchResult = JSON.parse(response.content).results;
                         });
                 }
             }
@@ -89,8 +87,8 @@ FlowRouter.route('/', {
             return Template.instance().poster_path.get();
         },
 
-        movieModal(){
-            return Template.instance().movieModal.get();
+        videosModal(){
+            return Template.instance().videos.get();
         },
         /*overview() {
             var truncated = document.getElementById('like').innerText;

@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from "meteor/http";
 import { Mongo } from 'meteor/mongo';
-import { SERVER_CONFIG } from 'server/server-config.js';
+import { SERVER_CONFIG } from './server-config';
+
 
 /*
 
@@ -27,9 +28,10 @@ const likesCollection = new Mongo.Collection('likes');
 
 var connectHandler = WebApp.connectHandlers;
 
+
+
 Meteor.startup(() => {
   // code to run on server at startup
-
     connectHandler.use(function (req, res, next) {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']);
@@ -68,7 +70,7 @@ WebApp.connectHandlers.use('/api/discover/search/', (req, res, next) => {
 WebApp.connectHandlers.use('/api/search/', (req, res, next) => {
     let Tag = req.url.split("/");
 
-    HTTP.call('GET', 'https://api.themoviedb.org/3/search/movie?api_key=' + api_key + '1793c4843a64fbd6fdba88ce08e45c5f&query=' + Tag[1] + '', {},
+    HTTP.call('GET', 'https://api.themoviedb.org/3/search/movie?api_key=' + api_key + '&query=' + Tag[1] + '', {},
         function(error, response) {
             // Handle the error or response here.
             // ctrl.movies.set(JSON.parse(response.content).results)
@@ -84,10 +86,11 @@ WebApp.connectHandlers.use('/api/search/', (req, res, next) => {
 
 });
 
-WebApp.connectHandlers.use('/api/discover/search/movie/', (req, res, next) => {
+WebApp.connectHandlers.use('/api/discover/video/', (req, res, next) => {
     let Tag = req.url.split("/");
+    console.log(Tag[1]);
 
-    HTTP.call('GET', 'https://api.themoviedb.org/3/movie/' + Tag[1] + '/videos?api_key=' + api_key + '&language=Fr' + Tag[1] + '', {},
+    HTTP.call('GET', 'https://api.themoviedb.org/3/movie/' + Tag[1] + '/videos?api_key=' + api_key + '&language=Fr', {},
         function(error, response) {
             // Handle the error or response here.
             // ctrl.movies.set(JSON.parse(response.content).results)
@@ -95,7 +98,7 @@ WebApp.connectHandlers.use('/api/discover/search/movie/', (req, res, next) => {
             dataMovie = response.data;
 
             res.writeHead(200);
-            console.log("Response : " + JSON.stringify(dataMovie));
+            //console.log("Response : " + JSON.stringify(dataMovie));
             res.write(JSON.stringify(dataMovie));
             res.end();
         });
